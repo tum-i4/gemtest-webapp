@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeMTest: General Metamorphic Testing Framework</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <style>
+        th {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+<h1>GeMTest: General Metamorphic Testing Framework</h1>
+<form method="GET" action="{{ url_for('main.select_test_run') }}" class="select-form">
+    <label for="test_run">Filter by Metamorphic Test Run:</label>
+    <br>
+    <select id="test_run" name="test_run" multiple multiple style="margin-left: 10px;">
+        {% for test_run in files %}
+            <option value="{{ test_run }}"
+                    {% if current_test_run == test_run %}selected{% endif %}>{{ test_run }}</option>
+        {% endfor %}
+    </select>
+    <div class="filter-button">
+        <button type="submit">Apply Selection</button>
+    </div>
+</form>
+
+<div class="data-box">
+    <p>Number of executed test cases: {{ data['num_executed'] }}</p>
+    <p>Number of passed test cases: {{ data['num_passed'] }}</p>
+    <p>Number of failed test cases: {{ data['num_failed'] }}</p>
+    <p>Number of skipped test cases: {{ data['num_skipped'] }}</p>
+    <p>Execution time: {{ data['execution_time'] }} seconds</p>
+</div>
+<h2>Failure rate Overview</h2>
+<table>
+    <tr>
+        <th></th>
+        {% for col_name in data['table_data'].columns %}
+            <th>{{ col_name }}</th>
+        {% endfor %}
+    </tr>
+    {% for index, row in data['table_data'].iterrows() %}
+        <tr>
+            <th class="header">{{ index }}</th>
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+<h2>Individual Metamorphic Test Cases</h2>
+
+<form method="GET" action="{{ url_for('main.filter_test_cases') }}" class="filter-form">
+    <div class="filter-row">
+        <div class="filter-item">
+            <label for="mr_name">Filter by Metamorphic Relation:</label>
+            <select id="mr_name" name="mr_name" multiple>
+                <option value="all" {% if 'all' in request.args.getlist('mr_name') %} selected {% endif %}>All</option>
+                {% for mr_name in unique_mr_names %}
+                    <option value="{{ mr_name }}" {% if mr_name in request.args.getlist('mr_name') %} selected {% endif %}>
+                        {{ mr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="sut_name">Filter by System under Test:</label>
+            <select id="sut_name" name="sut_name" multiple>
+                <option value="all" {% if 'all' in request.args.getlist('sut_name') %} selected {% endif %}>All</option>
+                {% for sut_name in unique_sut_names %}
+                    <option value="{{ sut_name }}" {% if sut_name in request.args.getlist('sut_name') %} selected {% endif %}>
+                        {{ sut_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="test_result">Filter by Outcome:</label>
+            <select id="test_result" name="test_result" multiple>
+                <option value="all" {% if 'all' in request.args.getlist('test_result') %} selected {% endif %}>All</option>
+                {% for test_result in unique_test_results %}
+                    <option value="{{ test_result }}" {% if test_result in request.args.getlist('test_result') %} selected {% endif %}>
+                        {{ test_result }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="substring">Filter by Substring:</label>
+            <input type="text" id="substring" name="substring" value="{{ request.args.get('substring', '') }}">
+        </div>
+    </div>
+    <div class="filter-button">
+        <button type="submit">Apply Filter</button>
+    </div>
+</form>
+
+
+<table>
+    <tr>
+        <th>MTC name</th>
+        <th>Outcome</th>
+        <th>MR name</th>
+        <th>SUT name</th>
+        <th>Parameters</th>
+
+    </tr>
+    {% for index, row in individual_test_results.iterrows() %}
+        <tr>
+            <td><a href="{{ url_for('main.mtc_detail_view', test_case_id=row['_id']) }}"
+                   target="_blank">{{ row['mtc_name'] }}</a></td>
+            <td class="{% if row['test_result'] == 'failed' %}failed{% elif row['test_result'] == 'passed' %}passed{% elif row['test_result'] == 'skipped' %}skipped{% endif %}">{{ row['test_result'] }}</td>
+            <td>{{ row['mr_name'] }}</td>
+            <td>{{ row['sut_name'] }}</td>
+            <td>{{ row['parameters'] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination-container">
+    <div class="pagination">
+        {% if current_page != 1 %}
+            <a href="{{ url_for('main.filter_test_cases', page=1, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">First</a>
+            <a href="{{ url_for('main.filter_test_cases', page=current_page-1, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">Previous</a>
+        {% endif %}
+
+        {% for num in range(1, total_pages + 1) %}
+            {% if num == current_page %}
+                <a class="active" href="{{ url_for('main.filter_test_cases', page=num, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">{{ num }}</a>
+            {% else %}
+                <a href="{{ url_for('main.filter_test_cases', page=num, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if current_page != total_pages %}
+            <a href="{{ url_for('main.filter_test_cases', page=current_page+1, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">Next</a>
+            <a href="{{ url_for('main.filter_test_cases', page=total_pages, mr_name=request.args.getlist('mr_name'), sut_name=request.args.getlist('sut_name'), test_result=request.args.getlist('test_result'), substring=request.args.get('substring')) }}">Last</a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

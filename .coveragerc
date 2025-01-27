@@ -1,0 +1,9 @@
+[report]
+exclude_lines =
+    pragma: no cover
+    \.\.\.
+
+[run]
+omit =
+    config.py
+    config-3.py

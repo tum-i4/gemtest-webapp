@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MTC Detail View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>MTC Detail View</h1>
+<p>Test Case ID: {{ test_case_id }}</p>
+<p>System Under Test: {{ sut_name }}</p>
+<p>Metamorphic Relation: {{ mr_name }}</p>
+<p>Metamorphic Test Case: {{ mtc_name }}</p>
+<p>Test Result: <span style="color:
+        {% if test_result == 'failed' %}red{% elif test_result == 'passed' %}green{% elif test_result == 'skipped' %}{{ skipped_color }}{% endif %}">{{ test_result }}
+  </span></p>
+
+<div class="container">
+    <table>
+        <tr>
+            <th>Input</th>
+            <th>SUT</th>
+            <th>Output</th>
+        </tr>
+        {% for i in range(source_inputs['values']|length) %}
+            <tr>
+                {% if source_inputs['is_valid_path'][i] %}
+                    <td class="input-cell"><img src="{{ url_for('static', filename=source_inputs['values'][i]) }}"
+                                                width="100" height="100" alt=""></td>
+                {% else %}
+                    <td class="input-cell">{{ source_inputs['values'][i] }}</td>
+                {% endif %}
+
+                <td><span class="inline"><span>{{ sut }}</span></span></td>
+
+                {% if source_outputs['is_valid_path'][i] %}
+                    <td class="input-cell"><img src="{{ url_for('static', filename=source_outputs['values'][i]) }}"
+                                                width="100" height="100" alt=""></td>
+                {% else %}
+                    <td class="input-cell">{{ source_outputs['values'][i] }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td>{{ transformation }}</td>
+            <td></td>
+            <td>
+                {% set relation_parts = relation.split(':') %}
+                {{ relation_parts[0] }}:
+                {% set result_with_arrows = relation_parts[1].strip() %}
+                {% set result = result_with_arrows.split()[0] %}
+                {% if result == 'passed' %}
+                    <span class="inline" style="color: green">{{ result }}</span>
+                    {{ result_with_arrows|replace(result, '') }}
+                {% elif result == 'failed' %}
+                    <span class="inline" style="color: red">{{ result }}</span>
+                    {{ result_with_arrows|replace(result, '') }}
+                {% elif result == 'skipped' %}
+                    <span class="inline" style="color: {{ skipped_color }}">{{ result }}</span>
+                    {{ result_with_arrows|replace(result, '') }}
+                {% else %}
+                    {{ result_with_arrows }}
+                {% endif %}
+            </td>
+        </tr>
+
+        {% for i in range(followup_inputs['values']|length) %}
+            <tr>
+                {% if followup_inputs['is_valid_path'][i] %}
+                    <td class="input-cell"><img src="{{ url_for('static', filename=followup_inputs['values'][i]) }}"
+                                                width="100" height="100" alt=""></td>
+                {% else %}
+                    <td class="input-cell">{{ followup_inputs['values'][i] }}</td>
+                {% endif %}
+
+                <td>{{ sut }}</td>
+
+                {% if followup_outputs['is_valid_path'][i] %}
+                    <td class="input-cell"><img src="{{ url_for('static', filename=followup_outputs['values'][i]) }}"
+                                                width="100" height="100" alt=""></td>
+                {% else %}
+                    <td class="input-cell">{{ followup_outputs['values'][i] }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<p>Standard Output: {{ stdout }}</p>
+<p>Standard Error: {{ stderr }}</p>
+</body>
+</html>

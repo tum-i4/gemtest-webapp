@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "gemtest-webapp"
+version = "1.0.0"
+description = "Visualize metamorphic test cases from gemtest"
+keywords = ["metamorphic testing", "test", "framework"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Pytest",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Utilities",
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/tum-i4/gemtest-webapp"
+authors = [
+    "Simon Speth <simon.speth@tum.de>",
+    "Tathagata Bandyopadhyay <tathagata.bandyopadhyay@tum.de>",
+    "Paul Schwind <paul.schwind@tum.de>",
+    "Fabian Schlachter <fabian.schlachter@tum.de>",
+    "Moritz Pötzsch <moritz.poetzsch@tum.de>",
+    "Mino Estrella <m.estrella@tum.de>"
+]
+maintainers = ["Simon Speth <simon.speth@tum.de>"]
+packages = [
+    { include = "app", format = ["sdist", "wheel"] },
+    { include = "tests", format = "sdist" },
+]
+
+[tool.poetry.scripts]
+cov = "scripts.cov:html_coverage"
+install-hook = "scripts.install_hook:install_hook"
+lint = "scripts.lint:lint"
+test = "scripts.run_tests:run_tests"
+gemtest-webapp = "app.run:main"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.14"
+click = "^8.1.7"
+flask = "^2.1.3"
+pandas = [
+    {version = "^1.4.3", python = ">=3.8,<3.12"},
+    {version = "^2.2.3", python = ">=3.12,<3.14"}
+]
+pandas-stubs = [
+    {version = "^1.4.3", python = ">=3.8,<3.12"},
+    {version = "^2.2.3", python = ">=3.12,<3.14"}
+]
+
+[tool.poetry.group.test.dependencies]
+gemtest = ">=1.0.0"
+mypy = "^0.981"
+prospector = { extras = ["with_mypy", "with_bandit"], version = "^1.7.7" }
+pylint = "^2.17.7"
+pytest = ">=7.1.2,<9.0.0"
+pytest-cov = "^4.0.0"
+pytest-html = "^3.1.1"
+pytest-xdist = "^3.2.1"
+cosmic-ray = "^8.3.7"
+beautifulsoup4 = "^4.12.3"
+requests = "^2.32.3"
+setuptools = [
+    {version = "<75.4.0", python = "3.8"},
+    {version = "^75.7.0", python = ">=3.9,<3.14"}
+]
+
+[tool.mypy]
+plugins = "numpy.typing.mypy_plugin"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeMTest: General Metamorphic Testing Framework</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <style>
+        th {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+<h1>GeMTest: General Metamorphic Testing Framework</h1>
+<form method="GET" action="{{ url_for('main.select_test_run') }}" class="select-form">
+    <label for="test_run">Filter by Metamorphic Test Run:</label>
+    <br>
+    <select id="test_run" name="test_run" multiple class="wide-select" style="margin-left: 10px;">
+        <option value="" disabled selected>No test result available</option>
+    </select>
+    <p>{{ hint_message | safe }}</p>
+</form>
+</body>
+</html>
