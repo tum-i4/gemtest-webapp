@@ -10,7 +10,7 @@ First, run a ``gemtest`` test suite with the ``--html-report`` flag:
 $ pytest --html-report
 ```
 
-Then, run ``gemtest-webapp`` with the path to the gemtest_results folder created by a gemtest pytest run.
+Then, install ``gemtest-webapp`` via ``pip install gemtest-webapp`` and run it with the path to the gemtest_results folder created by a gemtest pytest run.
 Usually, this folder is created in the directory from which pytest was executed.
 
 ```console
@@ -55,7 +55,8 @@ def visualize_input(self, sut_input: Any, **kwargs) -> str:
 In the html-report, displayed by the ``gemtest-webapp``, one can see the information of all passed, failed, and skipped 
 test cases as well as filter by metamorphic relation, system under test, and test verdict.
 
-![Function Domains](resources/MTC-html-report.png)
+![MTC HTML Report](https://raw.githubusercontent.com/tum-i4/gemtest-webapp/main/resources/MTC-html-report.png)
+
 
 ## MTC Detail View
 
@@ -63,7 +64,7 @@ When clicking on the link/name of a specific metamorphic test case, the metamorp
 It visualizes the inputs and outputs of the system under test if a custom visualizer is passed.
 This makes investigating why one's test case passed or failed faster and more intuitive. 
 
-![Function Domains](resources/MTC-detail-view.png)
+![MTC Detail View](https://raw.githubusercontent.com/tum-i4/gemtest-webapp/main/resources/MTC-detail-view.png)
 
 ## Citation
 If you find the ``gemtest`` or ``gemtest-webapp`` framework useful in your research or projects, please consider citing it:
@@ -80,5 +81,5 @@ If you find the ``gemtest`` or ``gemtest-webapp`` framework useful in your resea
 ```
 
 ## License
-[MIT License](https://gitlab.lrz.de/pypracticum/team-mt-metamorphic-testing-framework/-/blob/main/LICENSE)
+[MIT License](https://github.com/tum-i4/gemtest-webapp/blob/main/LICENSE)
 

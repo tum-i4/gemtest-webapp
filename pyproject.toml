@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gemtest-webapp"
-version = "1.0.0"
+version = "1.0.1"
 description = "Visualize metamorphic test cases from gemtest"
 keywords = ["metamorphic testing", "test", "framework"]
 classifiers = [

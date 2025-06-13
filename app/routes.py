@@ -310,7 +310,7 @@ def _get_values_valid_path(row, value_type):
     separator = "__\n\r__"
     values = row[value_type].split(separator)
     paths_to_posix(values)
-    is_valid_path = [os.path.exists(os.path.join("static/" + value)) for value in values]
+    is_valid_path = [os.path.exists(os.path.join("app/static/" + value)) for value in values]
     return {'values': values, 'is_valid_path': is_valid_path}
 
 
